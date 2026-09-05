@@ -29,6 +29,13 @@ uint get_image_size_for_bmp(FILE *fptr_image)
     return width * height * 3;
 }
 
+//Logic for get the size of .txt file
+uint get_file_size(FILE *fptr_sec)
+{
+    fseek(fptr_sec, 0, SEEK_END); //Moving the cursor to last position
+    return ftell(fptr_sec); //returning the last position
+}
+
 /* 
  * Get File pointers for i/p and o/p files
  * Inputs: Src Image file, Secret file and
@@ -75,6 +82,7 @@ Status open_files(EncodeInfo *encInfo)
     return e_success;
 }
 
+//Check the user choice encoding or decoding
 OperationType check_operation_type(char *argv[])
 {
     if(strcmp(argv[1],"-e") == 0)
@@ -90,6 +98,8 @@ OperationType check_operation_type(char *argv[])
         return e_unsupported;
     }
 }
+
+//check wheather the user provided .bmp and .txt and also file the date to the structure members
 Status read_and_validate_encode_args(char *argv[],EncodeInfo *encInfo)
 {
     //Validate the .bmp file
@@ -135,6 +145,26 @@ Status read_and_validate_encode_args(char *argv[],EncodeInfo *encInfo)
 
 }
 
+//For checking the image capacity to encode the secret data
+Status check_capacity(EncodeInfo *encInfo)
+{
+    //get the size of image file and stores in the structure member
+    encInfo ->  image_capacity = get_image_size_for_bmp(encInfo ->  fptr_src_image);
+    //get the size of secret file and stores in the structure member
+    encInfo -> size_secret_file = get_file_size(encInfo -> fptr_secret);
+
+    //validating the size and returning the result
+    if(encInfo -> image_capacity > (54 +((2 + 4 + 4 + 4 + encInfo -> size_secret_file) * 8)))
+    {
+        return e_success; //returning success message
+    }
+    else
+    {
+        return e_failure; //returning failure message
+    }
+}
+
+//rest of the encoding function is called here
 Status do_encoding(EncodeInfo *encInfo)
 {
     //Validate wheather all files are opened successfully
@@ -142,6 +172,17 @@ Status do_encoding(EncodeInfo *encInfo)
     {
         printf("Opened all files Successfully\n"); //printing the success message to the user
         printf("Started Encoding...\n");
+
+        //validate wheater the image has enough space to encode
+        if(check_capacity(encInfo) == e_success)
+        {
+            printf("Image has enough Capacity to encode\n"); //printing the success message to the user
+        }
+        else
+        {
+            printf("Do not have enough RCG data to encode the secret message\n"); //Printing the error message to the user
+            return e_failure;
+        }
     }
     else
     {
