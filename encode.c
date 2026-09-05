@@ -182,6 +182,12 @@ Status copy_bmp_header(FILE *fptr_src_image, FILE *fptr_dest_image)
     return e_success;
 }
 
+//for encoding the magic string
+Status encode_magic_string(const char *magic_string, EncodeInfo *encInfo)
+{
+    
+}
+
 //rest of the encoding function is called here
 Status do_encoding(EncodeInfo *encInfo)
 {
@@ -196,10 +202,22 @@ Status do_encoding(EncodeInfo *encInfo)
         {
             printf("Image has enough Capacity to encode\n"); //printing the success message to the user
             
-            //Copy the header from input to output bmp fie
+            //Copy the header from input to output bmp file
             if(copy_bmp_header(encInfo -> fptr_src_image, encInfo->fptr_stego_image ) == e_success) 
             {
                 printf("Succesfully copied the header\n");
+
+                //Encode the magic string into output bmp file using the data of input bmp file
+                if(encode_magic_string(MAGIC_STRING, encInfo) == e_success)
+                {
+                    printf("Magic String encoded successfully\n");
+                }
+                else
+                {
+                    printf("Failed to encode the magic string\n");
+                    return e_failure;
+                }
+
             }
             else
             {
