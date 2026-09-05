@@ -2,6 +2,7 @@
 #define ENCODE_H
 
 #include "types.h" // Contains user defined types
+#include<string.h>
 
 /* 
  * Structure to store information required for
