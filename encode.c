@@ -164,6 +164,24 @@ Status check_capacity(EncodeInfo *encInfo)
     }
 }
 
+//For copy the header to destination file
+Status copy_bmp_header(FILE *fptr_src_image, FILE *fptr_dest_image)
+{
+    //declaring character array
+    char header[54];
+
+    //Moving file position to start
+    fseek(fptr_src_image,0,SEEK_SET);
+
+    //Read the 54 byte Header data from source file
+    fread(header,54,sizeof(char),fptr_src_image);
+
+    //Write 54 bytes header data to stego image
+    fwrite(header,54,sizeof(char),fptr_dest_image);
+    
+    return e_success;
+}
+
 //rest of the encoding function is called here
 Status do_encoding(EncodeInfo *encInfo)
 {
@@ -177,6 +195,17 @@ Status do_encoding(EncodeInfo *encInfo)
         if(check_capacity(encInfo) == e_success)
         {
             printf("Image has enough Capacity to encode\n"); //printing the success message to the user
+            
+            //Copy the header from input to output bmp fie
+            if(copy_bmp_header(encInfo -> fptr_src_image, encInfo->fptr_stego_image ) == e_success) 
+            {
+                printf("Succesfully copied the header\n");
+            }
+            else
+            {
+                printf("Failed to copy the header\n");
+                return e_failure;    
+            }
         }
         else
         {
