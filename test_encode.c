@@ -8,11 +8,21 @@ int main(int argc,char *argv[])
     //check the operation_type wheather it is encoding or decoding
     if(check_operation_type(argv) == e_encode)
     {
-        printf("Selected Encoding\n");
+        EncodeInfo encInfo; //declaring structure name to access members 
+        printf("Selected Encoding\n"); //printing the encoding selected to the user
+        //validate wheather the .bmp and .txt file is present or not
+        if(read_and_validate_encode_args(argv,&encInfo) == e_success)
+        {
+            printf("Read and Validate encode arguments is Success\n"); //printing the arguments validatiion output 
+        }
+        else
+        {
+            printf("Failed to validate the input arguments\n");//printing the error message
+        }
     }
     else if(check_operation_type(argv) == e_decode)
     {
-        printf("Selected Decoding\n");
+        printf("Selected Decoding\n"); //printing the decoding selected to the user
     }
     else
     {

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "encode.h"
 #include "types.h"
+#include<string.h>
 
 /* Function Definitions */
 
@@ -72,4 +73,42 @@ Status open_files(EncodeInfo *encInfo)
 
     // No failure return e_success
     return e_success;
+}
+
+//Function definiton
+Status read_and_validate_encode_args(char *argv[],EncodeInfo *encInfo)
+{
+    //Validate the .bmp file
+    if(argv[2] != NULL && strcmp(strstr(argv[2],"."),".bmp") == 0)
+    {
+        //Fetch and store the filename (.bmp) in the structure member (src_image_fname)
+        encInfo -> src_image_fname = argv[2];
+    }
+    else
+    {
+        return e_failure; //return error
+    }
+    //Validate the .txt file
+    if(argv[3] != NULL && strcmp(strstr(argv[3],"."),".txt") == 0)
+    {
+        //fetch and store the filename(.txt) in the structure member (secret_fname)
+        encInfo -> secret_fname = argv[3];
+    }
+    else
+    {
+        return e_failure; //return error
+    }
+    //optional output_image_file to create in two methods
+    if(argv[4] != NULL)
+    {
+        //Fetch and store the filename in the structure member (stego_image_fname)
+        encInfo -> stego_image_fname = argv[4];
+    }
+    else
+    {
+        //create by default if the user did not create any file
+        encInfo -> stego_image_fname = "stego.bmp";
+    }
+    return e_success; //after all the process return success
+
 }
