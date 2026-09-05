@@ -75,7 +75,21 @@ Status open_files(EncodeInfo *encInfo)
     return e_success;
 }
 
-//Function definiton
+OperationType check_operation_type(char *argv[])
+{
+    if(strcmp(argv[1],"-e") == 0)
+    {
+        return e_encode;
+    }   
+    else if(strcmp(argv[1],"-d") == 0)
+    {
+        return e_decode;
+    }
+    else
+    {
+        return e_unsupported;
+    }
+}
 Status read_and_validate_encode_args(char *argv[],EncodeInfo *encInfo)
 {
     //Validate the .bmp file
@@ -119,4 +133,20 @@ Status read_and_validate_encode_args(char *argv[],EncodeInfo *encInfo)
     }
     return e_success; //after all the process return success
 
+}
+
+Status do_encoding(EncodeInfo *encInfo)
+{
+    //Validate wheather all files are opened successfully
+    if(open_files(encInfo) == e_success)
+    {
+        printf("Opened all files Successfully\n"); //printing the success message to the user
+        printf("Started Encoding...\n");
+    }
+    else
+    {
+        printf("Failed to open the files\n"); //printing the error message to the user
+        return e_failure;
+    }
+    return e_success;
 }

@@ -1,8 +1,11 @@
+//Header Inclusion
 #include <stdio.h>
 #include<string.h>
 #include "encode.h"
 #include "types.h"
 
+
+//Main program starts here()
 int main(int argc,char *argv[])
 {
     //check the operation_type wheather it is encoding or decoding
@@ -14,6 +17,15 @@ int main(int argc,char *argv[])
         if(read_and_validate_encode_args(argv,&encInfo) == e_success)
         {
             printf("Read and Validate encode arguments is Success\n"); //printing the arguments validatiion output 
+            //check wheather the encoding completed or not 
+            if(do_encoding(&encInfo) == e_success)
+            {
+                printf("Encoding Completed\n"); //printing the output to the user
+            }
+            else
+            {
+                printf("Failed to encode the date\n");
+            }
         }
         else
         {
@@ -32,21 +44,4 @@ int main(int argc,char *argv[])
         printf("*******************************************************\n");
     }
     return 0;
-}
-
-//Function definiton
-OperationType check_operation_type(char *argv[])
-{
-    if(strcmp(argv[1],"-e") == 0)
-    {
-        return e_encode;
-    }   
-    else if(strcmp(argv[1],"-d") == 0)
-    {
-        return e_decode;
-    }
-    else
-    {
-        return e_unsupported;
-    }
 }
