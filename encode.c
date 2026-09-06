@@ -218,9 +218,21 @@ Status encode_magic_string(const char *magic_string, EncodeInfo *encInfo)
 
 }
 //Encoding the size in the lsb of RGB
+Status encode_size_to_lsb(int data,char *image_buffer)
+{
+    //Declaration
+    unsigned int mask = 1 << 31; //initial mask 
 
+    //Loop for  clearing, extracting and merging the bit
+    for(int i  = 0;i < 32;i++)
+    {
+        image_buffer[i] = (image_buffer[i] & 0xFE) | ((data & mask) >> (31 - i));
+        mask = mask >> 1; //changing masking for next bit encoding
+    }
+    return e_success; //returns success
+}
 
-//For encoding the secret file extension 
+//For encoding the secret file extension size
 Status encode_size(int size, FILE *fptr_src_image, FILE *fptr_stego_image)
 {
     //Declaration
@@ -229,6 +241,18 @@ Status encode_size(int size, FILE *fptr_src_image, FILE *fptr_stego_image)
     fread(str, 32, sizeof(char), fptr_src_image);
     encode_size_to_lsb(size, str); //calling the function
     fwrite(str, 32, sizeof(char), fptr_stego_image); //write the data into the stego image
+    return e_success; //returns success
+
+}
+
+//Encode the secret file extension 
+Status encode_secret_file_extn(const char *file_extn, EncodeInfo *encInfo)
+{
+    //Declaration
+    file_extn = ".txt"; //character file(extension) to encode
+    //call the character encode function
+    encode_data_to_image(file_extn,strlen(file_extn),  encInfo -> fptr_src_image, encInfo -> fptr_stego_image, encInfo);
+    return e_success;
 
 }
 
@@ -260,6 +284,18 @@ Status do_encoding(EncodeInfo *encInfo)
                     if(encode_size(strlen(".txt"), encInfo -> fptr_src_image, encInfo -> fptr_stego_image) == e_success)
                     {
                         printf("Successfully encoded the secret file extension size\n"); //Displaying success message to the user
+
+                        //Encode the secret file extension into the stego file
+                        if(encode_secret_file_extn(encInfo -> extn_secret_file, encInfo) == e_success)
+                        {
+                            printf("Successfully encoded the secret file extension\n"); //Displaying success message to the user
+                        }
+                        else
+                        {
+                            printf("Failed to encode the secret file extension\n"); //Displays error message
+                            return e_failure; 
+                
+                        }
                     }
                     else
                     {
