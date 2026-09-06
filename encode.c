@@ -217,6 +217,20 @@ Status encode_magic_string(const char *magic_string, EncodeInfo *encInfo)
     return e_success; //Returns success 
 
 }
+//Encoding the size in the lsb of RGB
+
+
+//For encoding the secret file extension 
+Status encode_size(int size, FILE *fptr_src_image, FILE *fptr_stego_image)
+{
+    //Declaration
+    char str[32]; //to encode the 4 bytes of integer value
+    //read the data from source file
+    fread(str, 32, sizeof(char), fptr_src_image);
+    encode_size_to_lsb(size, str); //calling the function
+    fwrite(str, 32, sizeof(char), fptr_stego_image); //write the data into the stego image
+
+}
 
 //rest of the encoding function is called here
 Status do_encoding(EncodeInfo *encInfo)
@@ -241,6 +255,17 @@ Status do_encoding(EncodeInfo *encInfo)
                 if(encode_magic_string(MAGIC_STRING, encInfo) == e_success)
                 {
                     printf("Magic String encoded successfully\n"); //Displaying success message to the user
+
+                    //Encode the secret file extension size into the stego file
+                    if(encode_size(strlen(".txt"), encInfo -> fptr_src_image, encInfo -> fptr_stego_image) == e_success)
+                    {
+                        printf("Successfully encoded the secret file extension size\n"); //Displaying success message to the user
+                    }
+                    else
+                    {
+                        printf("Failed to encode the secret file extension size\n"); //Displays error message
+                        return e_failure; 
+                    }
                 }
                 else
                 {
