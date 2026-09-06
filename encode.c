@@ -256,6 +256,18 @@ Status encode_secret_file_extn(const char *file_extn, EncodeInfo *encInfo)
 
 }
 
+// Encode secret file size 
+Status encode_secret_file_size(int file_size, EncodeInfo *encInfo)
+{
+    //Declaration
+    char str[32]; //to encode the 4 bytes of integer value
+    //read the data from source file
+    fread(str, 32, sizeof(char), encInfo -> fptr_src_image);
+    encode_size_to_lsb(file_size, str); //calling the function
+    fwrite(str, 32, sizeof(char), encInfo -> fptr_stego_image); //write the data into the stego image
+    return e_success; //returns success
+}
+
 //rest of the encoding function is called here
 Status do_encoding(EncodeInfo *encInfo)
 {
@@ -289,6 +301,18 @@ Status do_encoding(EncodeInfo *encInfo)
                         if(encode_secret_file_extn(encInfo -> extn_secret_file, encInfo) == e_success)
                         {
                             printf("Successfully encoded the secret file extension\n"); //Displaying success message to the user
+
+                            //Encode the secret file size into the stego file
+                            if(encode_secret_file_size(encInfo -> size_secret_file, encInfo) == e_success)
+                            {
+                                printf("Successfully encoded the secret file size\n"); //Displaying success message to the user
+                            }
+                            else
+                            {
+                                printf("Failed to encode the secret file size\n"); //Displays error message
+                                return e_failure; 
+
+                            }
                         }
                         else
                         {
