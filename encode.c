@@ -205,7 +205,7 @@ Status encode_data_to_image(const char *data, int size, FILE *fptr_src_image, FI
     {
         //read 8 bytes of RGB data from source image 
         fread(encInfo -> image_data, 8, sizeof(char), encInfo -> fptr_src_image);
-        encode_byte_to_lsb(data[i], encInfo -> image_data);
+        encode_byte_to_lsb(data[i], encInfo -> image_data); //callin the function 
         fwrite(encInfo -> image_data, 8, sizeof(char), encInfo -> fptr_stego_image); //Write 8 bytes of encoded data to the output image
     }
 }
