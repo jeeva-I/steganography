@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "encode.h"
 #include "types.h"
+#include"common.h"
 #include<string.h>
 
 /* Function Definitions */
@@ -181,11 +182,40 @@ Status copy_bmp_header(FILE *fptr_src_image, FILE *fptr_dest_image)
     
     return e_success;
 }
+//Encoding the character in the lsb of RGB
+Status encode_byte_to_lsb(char data,  char *image_buffer)
+{
+    //Declaration
+    unsigned char mask = 1 << 7; //initial mask 
 
+    //Loop for  clearing, extracting and merging the bit
+    for(int i  = 0;i < 8;i++)
+    {
+        image_buffer[i] = (image_buffer[i] & 0xFE) | ((data & mask) >> (7 - i));
+        mask = mask >> 1; //changing masking for next bit encoding
+    }
+    return e_success; //returns success
+
+}
+//For encoding character 
+Status encode_data_to_image(const char *data, int size, FILE *fptr_src_image, FILE *fptr_stego_image, EncodeInfo *encInfo)
+{
+    //call the function encode byte to lsb to encode the data one after the other
+    for(int i = 0;i < size;i++)
+    {
+        //read 8 bytes of RGB data from source image 
+        fread(encInfo -> image_data, 8, sizeof(char), encInfo -> fptr_src_image);
+        encode_byte_to_lsb(data[i], encInfo -> image_data);
+        fwrite(encInfo -> image_data, 8, sizeof(char), encInfo -> fptr_stego_image); //Write 8 bytes of encoded data to the output image
+    }
+}
 //for encoding the magic string
 Status encode_magic_string(const char *magic_string, EncodeInfo *encInfo)
-{
-    
+{   
+    //Every character encoding will have to call this function
+    encode_data_to_image(magic_string,strlen(magic_string),encInfo -> fptr_src_image, encInfo->fptr_stego_image,encInfo);
+    return e_success; //Returns success 
+
 }
 
 //rest of the encoding function is called here
@@ -210,18 +240,18 @@ Status do_encoding(EncodeInfo *encInfo)
                 //Encode the magic string into output bmp file using the data of input bmp file
                 if(encode_magic_string(MAGIC_STRING, encInfo) == e_success)
                 {
-                    printf("Magic String encoded successfully\n");
+                    printf("Magic String encoded successfully\n"); //Displaying success message to the user
                 }
                 else
                 {
-                    printf("Failed to encode the magic string\n");
+                    printf("Failed to encode the magic string\n"); //wError message for the user
                     return e_failure;
                 }
 
             }
             else
             {
-                printf("Failed to copy the header\n");
+                printf("Failed to copy the header\n"); //error message
                 return e_failure;    
             }
         }
