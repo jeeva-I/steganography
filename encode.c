@@ -293,6 +293,20 @@ Status encode_secret_file_data(EncodeInfo *encInfo)
     return e_success; //return success
 }
 
+// Copy remaining image bytes from src to stego image after encoding
+Status copy_remaining_img_data(FILE *fptr_src, FILE *fptr_dest)
+{
+    //Declaration
+    char ch; //For storing the individual character
+    
+    //Running loop to copy the remaining contents upto the end of file
+    while(fread(&ch, 1, sizeof(char),fptr_src) > 0)
+    {
+        fwrite(&ch, 1, 1,fptr_dest); //write the fetched content into the stego file
+    }
+    return e_success; //return success
+}
+
 //rest of the encoding function is called here
 Status do_encoding(EncodeInfo *encInfo)
 {
@@ -336,6 +350,17 @@ Status do_encoding(EncodeInfo *encInfo)
                                 if(encode_secret_file_data(encInfo) == e_success)
                                 {
                                     printf("Successfully encoded the secret file data\n"); //Displaying success message to the user
+
+                                    //Copy the remaining data to the stego file
+                                    if(copy_remaining_img_data(encInfo -> fptr_src_image, encInfo -> fptr_stego_image) == e_success)
+                                    {
+                                        printf("Successfully copied remaining RGB data \n"); //Displaying success message to the user
+                                    }
+                                    else
+                                    {
+                                        printf("Failed to Copy remaining data\n"); //Displays error message
+                                        return e_failure;
+                                    }
                                 }
                                 else
                                 {
