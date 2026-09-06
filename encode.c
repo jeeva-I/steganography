@@ -268,6 +268,31 @@ Status encode_secret_file_size(int file_size, EncodeInfo *encInfo)
     return e_success; //returns success
 }
 
+//Encode secret file data
+Status encode_secret_file_data(EncodeInfo *encInfo)
+{
+    //Declaration of character
+    char ch;
+
+    //Move the file to the starting position
+    fseek(encInfo -> fptr_secret, 0, SEEK_SET);
+
+    for(int i = 0;i < encInfo -> size_secret_file;i++) //loop for encoding the data upto end of file
+    {   
+        //Read the data form source file and store the date inmage bufffer
+        fread(encInfo -> image_data, 8, sizeof(char), encInfo -> fptr_src_image);
+        fread(&ch, 1, sizeof(char), encInfo -> fptr_secret); //reading the character(contents) from secret.txt
+
+        //Function call to encode the character in the bits of lsb
+        encode_byte_to_lsb(ch, encInfo -> image_data);
+
+        //Encode the data into the output stego_file
+        fwrite(encInfo -> image_data, 8, sizeof(char), encInfo -> fptr_stego_image);
+    }
+
+    return e_success; //return success
+}
+
 //rest of the encoding function is called here
 Status do_encoding(EncodeInfo *encInfo)
 {
@@ -306,6 +331,18 @@ Status do_encoding(EncodeInfo *encInfo)
                             if(encode_secret_file_size(encInfo -> size_secret_file, encInfo) == e_success)
                             {
                                 printf("Successfully encoded the secret file size\n"); //Displaying success message to the user
+                                
+                                //Encode the secret file data into the stego file
+                                if(encode_secret_file_data(encInfo) == e_success)
+                                {
+                                    printf("Successfully encoded the secret file data\n"); //Displaying success message to the user
+                                }
+                                else
+                                {
+                                    
+                                    printf("Failed to encode the secret file data\n"); //Displays error message
+                                    return e_failure; 
+                                }
                             }
                             else
                             {
