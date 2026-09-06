@@ -244,7 +244,7 @@ Status do_encoding(EncodeInfo *encInfo)
                 }
                 else
                 {
-                    printf("Failed to encode the magic string\n"); //wError message for the user
+                    printf("Failed to encode the magic string\n"); //Error message for the user
                     return e_failure;
                 }
 
