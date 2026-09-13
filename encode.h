@@ -1,5 +1,5 @@
-#ifndef ENCODE_H
-#define ENCODE_H
+#ifndef ENCODE_H //Condtional statement
+#define ENCODE_H //Macro definition 
 
 #include "types.h" // Contains user defined types
 
