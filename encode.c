@@ -356,6 +356,11 @@ Status do_encoding(EncodeInfo *encInfo)
                                     if(copy_remaining_img_data(encInfo -> fptr_src_image, encInfo -> fptr_stego_image) == e_success)
                                     {
                                         printf("Successfully copied remaining RGB data \n"); //Displaying success message to the user
+
+                                        //Close the opened files
+                                        fclose(encInfo->fptr_src_image);
+                                        fclose(encInfo->fptr_secret);
+                                        fclose(encInfo->fptr_stego_image);
                                     }
                                     else
                                     {
