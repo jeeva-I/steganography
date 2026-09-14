@@ -53,15 +53,15 @@ int main(int argc,char *argv[])
        if(read_and_validate_decode_args(argc, argv, &decInfo) == e_success)
         {
             printf("Read and Validate decode arguments is Success\n"); //printing the arguments validation output 
-            //check wheather the decoding completed or not 
-            // if(do_decoding(&decInfo) == e_success)
-            // {
-            //     printf("Decoding Completed\n"); //printing the output to the user
-            // }
-            // else
-            // {
-            //     printf("Failed to Decode the data\n");
-            // }
+           //check wheather the decoding completed or not 
+        if(do_decoding(&decInfo) == e_success)
+            {
+                printf("Decoding Completed\n"); //printing the output to the user
+            }
+        else
+            {
+                printf("Failed to Decode the data\n"); //Displaying the error message
+            }
         }
         else
         {

@@ -80,3 +80,63 @@ Status open_files_dec(DecodeInfo *decInfo)
 
     return e_success; //If all files opened successfully then return success
 }
+
+/* Decode magic string */
+Status decode_magic_string(const char *magic_string, DecodeInfo *decInfo)
+{
+        //Declaration
+        int index = 0;
+        char temp[strlen(magic_string) + 1];
+
+        //Using loop to extract the magic string 
+        while(magic_string[index] != '\0')
+        {
+            //Reading 8 bytes from input image file and validating
+            if(fread(decInfo -> image_data, 8, sizeof(char), decInfo -> fptr_stego) == 8)
+            {
+                
+                //Calling function to decode the content of 8 bytes
+                decode_byte_from_lsb(&temp[index] , decInfo -> image_data);
+                index++; //Incremening the index
+            }
+            else
+            {
+                return e_failure; //returns error
+            }
+            
+        }
+        temp[index] = '\0'; //Adding null
+
+        //comparing the string
+        if(strcmp(temp,magic_string) != 0)
+        {
+            return e_failure; //returning error
+        }
+
+        return e_success; //returing sucess
+
+}
+
+
+/* Perform complete decoding */
+Status do_decoding(DecodeInfo *decInfo)
+{
+    //Validates wheather all the files are opened successfully
+    if(open_files_dec(decInfo) == e_success)
+    {
+        printf("Opened all files Successfully\n"); //Displays the success message to the user
+        printf("Started Decoding...\n");
+
+        //Skips the .bmp header (54 bytes)
+        fseek(decInfo -> fptr_stego, 54, SEEK_SET);
+
+        //validate wheater the magic_strings are decoded or not
+        if(decode_magic_string(MAGIC_STRING, decInfo) == e_success)
+        {
+            printf("Magic String decoded successfully\n");
+        }
+
+    }
+
+    return e_success; // After all process completed it return sucess to the main
+}
