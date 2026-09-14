@@ -8,6 +8,16 @@
 //Main program starts here()
 int main(int argc,char *argv[])
 {
+    //check the arguments count condition
+    if(argc <= 2)
+    {
+        printf("Enter the CLA correctly\n");
+         printf("**************************Usage**********************\n");
+        printf("Encoding: ./a.out -e beautiful.bmp secret.txt stego.bmp\n");
+        printf("Decoding: ./a.out -d stego.bmp\n");
+        printf("*******************************************************\n");
+        return 1;
+    }
     //check the operation_type wheather it is encoding or decoding
     if(check_operation_type(argv) == e_encode)
     {
