@@ -1,3 +1,4 @@
+/* Header Inclusion */
 #include <stdio.h>
 #include "encode.h"
 #include "types.h"

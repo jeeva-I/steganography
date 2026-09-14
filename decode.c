@@ -1,8 +1,7 @@
 /* Header Inclusion */
 #include<stdio.h>
-#include<string.h>
 #include"decode.h"
-#include"types.h"
+#include"common.h"
 
-/*  Function defintion */
+/*  Function defintion  */
 
