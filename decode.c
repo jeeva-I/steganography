@@ -52,3 +52,31 @@ Status read_and_validate_decode_args(int argc, char *argv[], DecodeInfo *decInfo
 
     return e_success; //After all the process returns success to the main 
 }
+
+/* Open input and output files */
+Status open_files_dec(DecodeInfo *decInfo)
+{
+    //Input image file opening in read mode
+    decInfo -> fptr_stego = fopen(decInfo -> stego_image_fname, "r");
+
+    //Do error handling
+    if(decInfo -> fptr_stego == NULL)
+    {
+    	perror("fopen");
+    	fprintf(stderr, "ERROR: Unable to open file %s\n", decInfo -> stego_image_fname); //Displaying error message
+    	return e_failure; //return error
+    }
+
+    //Output text file opening in write mode
+    decInfo -> fptr_out = fopen(decInfo -> out_secret_txt, "w");
+
+    //Do error handling 
+    if(decInfo -> fptr_out == NULL)
+    {
+       perror("fopen");
+    	fprintf(stderr, "ERROR: Unable to open file %s\n", decInfo -> out_secret_txt); //Displaying error message
+    	return e_failure; //return error 
+    }
+
+    return e_success; //If all files opened successfully then return success
+}
