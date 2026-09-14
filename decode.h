@@ -1,60 +1,61 @@
-
 #ifndef DECODE_H
 #define DECODE_H
 
-#include "types.h" // Contains user defined types
+#include <stdio.h>
+#include "types.h"
+#include "common.h"
 
-/*
- * Structure to store information required for
- * decoding secret file from stego image
- * Info about output and intermediate data is
- * also stored
- */
-
-#define MAX_FILE_SUFFIX 4
+#define MAX_SECRET_BUF_SIZE 1
+#define MAX_IMAGE_BUF_SIZE (MAX_SECRET_BUF_SIZE * 8)
+#define MAX_FILE_SUFFIX 5
 
 typedef struct _DecodeInfo
 {
-    /* Input Image info */
-    char inp_image_fname[20]; // Input stego image filename
-    FILE *fptr_inp_image;     // File pointer for input stego image
-    char usr_migc_str[10];    // Input magic string
-    uint size_usr_migc_str;   // Length of input magic string
+    /* Input Image Info */
+    char *stego_image_fname;
+    FILE *fptr_stego;
 
-    /* Output File Info */
-    char out_fname[20];                  // Output filename for decoded secret
-    FILE *fptr_out;                      // File pointer for output file
-    long size_extn_out_file;             // Size of secret file extension
-    char extn_out_file[MAX_FILE_SUFFIX]; // Secret file extension
-    long size_out_file;                  // Size of decoded secret file
+    /* Output Secret File Info */
+    char *out_secret_txt;
+    FILE *fptr_out;
+
+    /* Decoded Information */
+    int secret_file_extn_size;
+    char secret_file_extn[MAX_FILE_SUFFIX];
+    int secret_file_size;
+
+    /* Image Data Buffer */
+    char image_data[MAX_IMAGE_BUF_SIZE];
 
 } DecodeInfo;
 
-/* Read and validate Decode args from argv */
-Status read_and_validate_decode_args(int argc, char *argv[]); // Validate decode arguments
+/* Function Prototypes */
 
-/* Get File pointers for input and output files */
-Status open_files_dec(DecodeInfo *decInfo); // Open files for decoding
+/* Check and validate decoding arguments */
+Status read_and_validate_decode_args(char *argv[], DecodeInfo *decInfo);
 
-/* Check magic string in stego image */
-Status magic_string_status(const char *magic_string, DecodeInfo *decInfo); // Verify magic string
+/* Open input and output files */
+Status open_files_dec(DecodeInfo *decInfo);
 
-/* Perform the decoding */
-Status do_decoding(DecodeInfo *decInfo); // Main decoding function
+/* Decode magic string */
+Status decode_magic_string(const char *magic_string, DecodeInfo *decInfo);
 
-/* Get size of secret file extension */
-Status get_size_extn_out_file(DecodeInfo *decInfo); // Get extension size
+/* Decode secret file extension size */
+Status decode_secret_file_extn_size(DecodeInfo *decInfo);
 
-/* Get secret file extension */
-Status get_extn_out_file(DecodeInfo *decInfo); // Get extension
+/* Decode secret file extension */
+Status decode_secret_file_extn(DecodeInfo *decInfo);
 
-/* Get size of secret file */
-Status get_size_out_file(DecodeInfo *decInfo); // Get secret file size
+/* Decode secret file size */
+Status decode_secret_file_size(DecodeInfo *decInfo);
 
-/* Write decoded data to output file */
-Status write_out_file(DecodeInfo *decInfo); // Write secret data to file
+/* Decode secret file data */
+Status decode_secret_file_data(DecodeInfo *decInfo);
 
-/* Decode a character from image */
-Status decode_8(DecodeInfo *decInfo); // Decode 8 bits to a char
+/* Decode one byte from image */
+Status decode_byte_from_lsb(char *data, char *image_buffer);
+
+/* Perform complete decoding */
+Status do_decoding(DecodeInfo *decInfo);
 
 #endif
