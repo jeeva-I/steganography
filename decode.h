@@ -35,7 +35,7 @@ typedef struct _DecodeInfo
 /* Function Prototypes */
 
 /* Check and validate decoding arguments */
-Status read_and_validate_decode_args(char *argv[], DecodeInfo *decInfo);
+Status read_and_validate_decode_args(int argc, char *argv[], DecodeInfo *decInfo);
 
 /* Open input and output files */
 Status open_files_dec(DecodeInfo *decInfo);
