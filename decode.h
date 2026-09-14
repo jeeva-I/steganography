@@ -1,14 +1,17 @@
-#ifndef DECODE_H
-#define DECODE_H
+#ifndef DECODE_H // Contional statement
+#define DECODE_H //Macro defintion
 
+/* Header Inclusion*/
 #include <stdio.h>
 #include "types.h"
 #include "common.h"
 
+/* Macro size definition */
 #define MAX_SECRET_BUF_SIZE 1
 #define MAX_IMAGE_BUF_SIZE (MAX_SECRET_BUF_SIZE * 8)
 #define MAX_FILE_SUFFIX 5
 
+/* Creating structure decoding */
 typedef struct _DecodeInfo
 {
     /* Input Image Info */
