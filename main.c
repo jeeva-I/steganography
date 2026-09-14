@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include<string.h>
 #include "encode.h"
+#include"decode.h"
 #include "types.h"
 
 
@@ -24,9 +25,9 @@ int main(int argc,char *argv[])
         EncodeInfo encInfo; //declaring structure name to access members 
         printf("Selected Encoding\n"); //printing the encoding selected to the user
         //validate wheather the .bmp and .txt file is present or not
-        if(read_and_validate_encode_args(argv,&encInfo) == e_success)
+        if(read_and_validate_encode_args(argv, &encInfo) == e_success)
         {
-            printf("Read and Validate encode arguments is Success\n"); //printing the arguments validatiion output 
+            printf("Read and Validate encode arguments is Success\n"); //printing the arguments validation output 
             //check wheather the encoding completed or not 
             if(do_encoding(&encInfo) == e_success)
             {
@@ -34,7 +35,7 @@ int main(int argc,char *argv[])
             }
             else
             {
-                printf("Failed to encode the date\n");
+                printf("Failed to encode the data\n");
             }
         }
         else
@@ -42,9 +43,30 @@ int main(int argc,char *argv[])
             printf("Failed to validate the input arguments\n");//printing the error message
         }
     }
+    //check the decoding part
     else if(check_operation_type(argv) == e_decode)
     {
+        DecodeInfo decInfo; //declaring structure name to access members 
         printf("Selected Decoding\n"); //printing the decoding selected to the user
+
+        //validate wheather the .bmp inuput image file is present or not
+       if(read_and_validate_decode_args(argc, argv, &decInfo) == e_success)
+        {
+            printf("Read and Validate decode arguments is Success\n"); //printing the arguments validation output 
+            //check wheather the decoding completed or not 
+            // if(do_decoding(&decInfo) == e_success)
+            // {
+            //     printf("Decoding Completed\n"); //printing the output to the user
+            // }
+            // else
+            // {
+            //     printf("Failed to Decode the data\n");
+            // }
+        }
+        else
+        {
+            printf("Failed to validate the input arguments\n");//printing the error message
+        }
     }
     else
     {
