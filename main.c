@@ -1,3 +1,45 @@
+/*
+———————————————————————————————————————————————————————————————————————
+Project: BMP Steganography Encoder/Decoder
+Author : JEEVA I
+Date   : 14 SEP 2026
+Language: C
+
+Description:
+  This C program allows users to hide (encode) a secret text file within a BMP image file
+  and to extract (decode) the hidden text file from a stego BMP image.
+  It uses LSB (Least Significant Bit) steganography to embed and retrieve data.
+
+Features:
+  - Encode a .txt secret file into a .bmp image, producing a new stego image.
+  - Decode and extract the hidden secret file from a stego .bmp image.
+  - Validates file types and checks if the image has enough capacity for the secret.
+  - Provides error messages for invalid usage or unsupported operations.
+
+Sample User Inputs:
+  ./a.out -e input.bmp secret.txt "#*"
+    → Encodes secret.txt into input.bmp using magic string "#*", and saves result as output_image.bmp (default output file)
+
+  ./a.out -e input.bmp secret.txt output.bmp "#*"
+    → Encodes secret.txt into input.bmp using magic string "#*", and saves result as output.bmp
+
+  ./a.out -d stego.bmp "#*"
+    → Decodes the hidden file from stego.bmp using magic string "#*", and saves it as output_text.txt (default output name)
+
+  ./a.out -d stego.bmp output "#*"
+    → Decodes the hidden file from stego.bmp using magic string "#*", and saves it as output.txt
+
+File Info:
+  - Only supports 24-bit BMP images for encoding/decoding.
+  - Secret file must be a .txt file.
+  - Output file for decoding should not include an extension; it is restored automatically.
+
+———————————————————————————————————————————————————————————————————————
+*/
+
+
+
+
 //Header Inclusion
 #include <stdio.h>
 #include<string.h>
