@@ -81,6 +81,33 @@ Status open_files_dec(DecodeInfo *decInfo)
     return e_success; //If all files opened successfully then return success
 }
 
+/* Decode secret file extension size */
+Status decode_secret_file_extn_size(DecodeInfo *decInfo)
+{
+    //
+}
+
+/* Decode one byte from image */
+Status decode_byte_from_lsb(char *data, char *image_buffer)
+{
+    //Declaration
+    unsigned char mask = 1 << 7;
+    unsigned char decoded_data = 0;
+
+    //Loop for extracting and merging the LSB
+    for(int i = 0; i < 8; i++)
+    {
+        //Extract the LSB from the image byte
+        decoded_data = decoded_data | ((image_buffer[i] & 1) << (7 - i));
+    }
+
+    //Store the decoded byte
+    *data = decoded_data;
+
+    //Return success
+    return e_success;
+}
+
 /* Decode magic string */
 Status decode_magic_string(const char *magic_string, DecodeInfo *decInfo)
 {
@@ -97,7 +124,7 @@ Status decode_magic_string(const char *magic_string, DecodeInfo *decInfo)
                 
                 //Calling function to decode the content of 8 bytes
                 decode_byte_from_lsb(&temp[index] , decInfo -> image_data);
-                index++; //Incremening the index
+                index++; //Incrementing the index
             }
             else
             {
