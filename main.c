@@ -110,7 +110,7 @@ int main(int argc,char *argv[])
             printf("Failed to validate the input arguments\n");//printing the error message
         }
     }
-    else
+    else //Displaying error message and comment line prompt to the user
     {
         printf("Invalid option\n***************************Usage**********************\n");
         printf("Encoding: ./a.out -e beautiful.bmp secret.txt stego.bmp\n");
